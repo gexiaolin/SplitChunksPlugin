@@ -1,10 +1,10 @@
-#SplitChunksPlugin（翻译初版）
+# SplitChunksPlugin（翻译初版）
 
 chunks（以及模块依赖）最初是通过webpack内部的父子关系进行的关联。`CommonsChunkPlugin`插件被用来避免它们之间的重复依赖，但是这样很难进行更深一步的优化。
 
 从webpack4开始，`CommonsChunkPlugin`被移除，新增了`optimization.splitChunks`和`optimization.runtimeChunk`选项，接下来看一下新流程的工作原理。
 
-##Defaults
+## Defaults
 
 开袋即食的`SplitChunksPlugin`应该对大多数用户来说都更友好。
 
