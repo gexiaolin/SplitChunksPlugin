@@ -1,9 +1,11 @@
 #SplitChunksPlugin（翻译初版）
+
 chunks（以及模块依赖）最初是通过webpack内部的父子关系进行的关联。`CommonsChunkPlugin`插件被用来避免它们之间的重复依赖，但是这样很难进行更深一步的优化。
 
 从webpack4开始，`CommonsChunkPlugin`被移除，新增了`optimization.splitChunks`和`optimization.runtimeChunk`选项，接下来看一下新流程的工作原理。
 
 ##Defaults
+
 开袋即食的`SplitChunksPlugin`应该对大多数用户来说都更友好。
 
 默认情况下，它只会影响按需加载的chunks，而不会影响到初始chunks，因为更改初始chunks将会影响到HTML文件项目运行时需要引入的的script内容。
@@ -20,6 +22,7 @@ webpack将会按照以下原则自动分离公共chunks：
 来看一些例子。
 
 ### Defaults:Example 1
+
 ``` js
 // index.js
 
@@ -45,6 +48,7 @@ import "react";
 更深一层的原因是，`react`可能并不会像你的其他代码那样频繁改动。通过把它打包进一个单独的chunk，就可以脱离你的应用代码而进行单独缓存（如果你有使用chunkhash, records, Cache-Control或者其他的长缓存方式）。
 
 ### Defaults:Example 2
+
 ``` js
 // entry.js
 
@@ -79,6 +83,7 @@ import "./more-helpers"; // more-helpers is also 40kb in size
 把`helpers`在两个trunk中分别打包会导致重复下载。通过把它单独打包只会下载一次。经过权衡考量，我们增加了一次额外的网络请求。这也是为什么默认会有30kb的大小限制。
 
 ## Configuration
+
 由于开发者希望有更多的默认功能以上的管理项，webpack提供了一些配置项来满足你的需求。
 
 如果你手动更改默认的配置项，请确保你知道它造成的改变和影响，并且确认所做的配置是在做**优化**。
@@ -88,11 +93,13 @@ import "./more-helpers"; // more-helpers is also 40kb in size
 ```
 
 ### Configuring cache groups
+
 默认把所有来自`node_modules`的模块（命名为`vendors`）分配到一个缓存组内，所有至少被2个trunks加载的模块分配到`default`缓存组。
 
 一个模块可以被分配到多个缓存组。最佳的缓存策略依赖于配置更高优先级的`priority`（`priority`选项）或者体积比较大的trunks。
 
 ### Conditions
+
 在满足所有条件的情况下，来自相同trunks和缓存组的模块将会打包一个新的trunk。
 
 一共有4个配置条件：
@@ -103,6 +110,7 @@ import "./more-helpers"; // more-helpers is also 40kb in size
 * `maxAsyncRequists` （默认：5）按需加载的最大并行请求数
 
 ### Naming
+
 使用`name`选项可以重命名分离出来的trunk的名字。
 
 ```
@@ -114,6 +122,7 @@ import "./more-helpers"; // more-helpers is also 40kb in size
 如果命名和一个入口文件的命名冲突，入口文件将被移除。
 
 #### `optimization.splitChunks.automaticNameDelimiter`
+
 webpack默认使用原名称+chunk名称来命名，类似`vendors~main.js`。
 
 如果你的项目规范不允许使用`~`字符，可以设置成其他替代字符，比如：`automaticNameDelimiter: "-"`。
@@ -121,6 +130,7 @@ webpack默认使用原名称+chunk名称来命名，类似`vendors~main.js`。
 然后后最终的命名就会变成`vendors-main.js`。
 
 ### Select chunks
+
 配置指定的chunks可以使用`chunks`来做选择。
 
 有3个可选项：`initial`，`async`和`all`。3个选项分别对应选择初始trunks，异步chunks，或者全部trunks。
@@ -137,6 +147,7 @@ webpack默认使用原名称+chunk名称来命名，类似`vendors~main.js`。
 T> 你可以结合[HtmlWebpackPlugin](https://webpack.docschina.org/plugins/html-webpack-plugin/)来使用，它将注入生成的所有vendor chunks。
 
 #### `optimization.splitChunks`
+
 这个配置项用来定义`SplitChunksPlugin`的默认表现。
 
 ```js
@@ -172,6 +183,7 @@ splitChunks: {
 下面是一些例子：
 
 ### Split Chunks:Example 1
+
 创建一个`commons`chunk，其中包含了所有入口文件的公共代码。
 
 ```js
@@ -189,6 +201,7 @@ splitChunks: {
 W> 这项配置会使你的初始文件体积增大，如果一个模块不是即时需要，建议按需加载。
 
 ### Split Chunks:Example 2
+
 创建一个`vendors`chunk，其中包含了所有来自`node_modules`的依赖。
 
 ```js
@@ -205,6 +218,7 @@ splitChunks: {
 W> 这项配置可能会使包含外部依赖的chunk体积增大，建议只包含框架和公共依赖，并在需要的时候动态加载其余依赖。
 
 #### `optimization.runtimeChunk`
+
 把`optimization.runtimeChunk`设置为`true`会在运行时为每个入口文件增加一个trunk。
 
 `single`会生成一个trunk，以便生成的其他trunks公用。
