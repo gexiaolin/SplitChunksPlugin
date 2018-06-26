@@ -36,7 +36,7 @@ import "react";
 
 // ...
 ```
-**结果：**一个包含`react`的独立chunk将被分离创建。在这个chunk被原chunk（index.js）引入时，两个chunk并行加载。
+**结果：** 一个包含`react`的独立chunk将被分离创建。在这个chunk被原chunk（index.js）引入时，两个chunk并行加载。
 
 为什么：
 
@@ -71,7 +71,7 @@ import "./more-helpers"; // more-helpers is also 40kb in size
 
 // ...
 ```
-**结果：**包含`./helpers`以及它所有依赖的独立trunk将被创建。在这个trunk被原trunk（entry.js）引入时，两个trunk并行加载。
+**结果：** 包含`./helpers`以及它所有依赖的独立trunk将被创建。在这个trunk被原trunk（entry.js）引入时，两个trunk并行加载。
 
 为什么：
 
